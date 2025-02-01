@@ -1,8 +1,10 @@
-VisionProTeleop
+# AppVisionTeleOp
+
+Made for Stanford Vision and Learning Group. Adopted from https://github.com/Improbable-AI/VisionProTeleop
+
 ===========
 
 ![CleanShot 2024-03-03 at 13 55 11@2x](https://github.com/Improbable-AI/VisionProTeleop/assets/68195716/d87a906c-ccf3-4e2d-bd25-a66dc0df803b)
-
 
 
 Wanna use your new Apple Vision Pro to control your robot?  Wanna record how you navigate and manipulate the world to train your robot? 

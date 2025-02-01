@@ -1,40 +1,36 @@
 import grpc
-from avp_stream.grpc_msg import * 
+from avp_stream.grpc_msg import *
 from threading import Thread
-from avp_stream.utils.grpc_utils import * 
-import time 
-import numpy as np 
+from avp_stream.utils.grpc_utils import *
+import numpy as np
+from termcolor import cprint
 
 
-YUP2ZUP = np.array([[[1, 0, 0, 0], 
-                    [0, 0, -1, 0], 
-                    [0, 1, 0, 0],
-                    [0, 0, 0, 1]]], dtype = np.float64)
+YUP2ZUP = np.array([[[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]], dtype=np.float64)
 
 
 class VisionProStreamer:
 
-    def __init__(self, ip, record = True): 
+    def __init__(self, ip, record=True):
 
-        # Vision Pro IP 
+        # Vision Pro IP
         self.ip = ip
-        self.record = record 
-        self.recording = [] 
-        self.latest = None 
+        self.record = record
+        self.recording = []
+        self.latest = None
         self.axis_transform = YUP2ZUP
         self.start_streaming()
 
-    def start_streaming(self): 
+    def start_streaming(self):
 
-        stream_thread = Thread(target = self.stream)
-        stream_thread.start() 
-        while self.latest is None: 
-            pass 
-        print(' == DATA IS FLOWING IN! ==')
-        print('Ready to start streaming.') 
+        self.stream_thread = Thread(target=self.stream)
+        self.stream_thread.start()
+        while self.latest is None:
+            pass
+        print(" == DATA IS FLOWING IN! ==")
+        print("Ready to start streaming.")
 
-
-    def stream(self): 
+    def stream(self):
 
         request = handtracking_pb2.HandUpdate()
         try:
@@ -43,36 +39,50 @@ class VisionProStreamer:
                 responses = stub.StreamHandUpdates(request)
                 for response in responses:
                     transformations = {
-                        "left_wrist": self.axis_transform @  process_matrix(response.left_hand.wristMatrix),
-                        "right_wrist": self.axis_transform @  process_matrix(response.right_hand.wristMatrix),
-                        "left_fingers":   process_matrices(response.left_hand.skeleton.jointMatrices),
-                        "right_fingers":  process_matrices(response.right_hand.skeleton.jointMatrices),
-                        "head": rotate_head(self.axis_transform @  process_matrix(response.Head)) , 
-                        "left_pinch_distance": get_pinch_distance(response.left_hand.skeleton.jointMatrices),
-                        "right_pinch_distance": get_pinch_distance(response.right_hand.skeleton.jointMatrices),
-                        # "rgb": response.rgb, # TODO: should figure out how to get the rgb image from vision pro 
+                        "left_wrist": self.axis_transform
+                        @ process_matrix(response.left_hand.wristMatrix),
+                        "right_wrist": self.axis_transform
+                        @ process_matrix(response.right_hand.wristMatrix),
+                        "left_fingers": process_matrices(response.left_hand.skeleton.jointMatrices),
+                        "right_fingers": process_matrices(
+                            response.right_hand.skeleton.jointMatrices
+                        ),
+                        "head": rotate_head(self.axis_transform @ process_matrix(response.Head)),
+                        "left_pinch_distance": get_pinch_distance(
+                            response.left_hand.skeleton.jointMatrices
+                        ),
+                        "right_pinch_distance": get_pinch_distance(
+                            response.right_hand.skeleton.jointMatrices
+                        ),
+                        # "rgb": response.rgb, # TODO: should figure out how to get the rgb image from vision pro
                     }
-                    transformations["right_wrist_roll"] = get_wrist_roll(transformations["right_wrist"])
-                    transformations["left_wrist_roll"] = get_wrist_roll(transformations["left_wrist"])
-                    if self.record: 
+                    transformations["right_wrist_roll"] = get_wrist_roll(
+                        transformations["right_wrist"]
+                    )
+                    transformations["left_wrist_roll"] = get_wrist_roll(
+                        transformations["left_wrist"]
+                    )
+                    if self.record:
                         self.recording.append(transformations)
-                    self.latest = transformations 
+                    self.latest = transformations
 
         except Exception as e:
+            self.stream_thread.join()
             print(f"An error occurred: {e}")
-            pass 
+            cprint("Streaming stopped. To start, call `start_streaming()`", "red")
+            return
 
-    def get_latest(self): 
+    def get_latest(self):
         return self.latest
-        
-    def get_recording(self): 
+
+    def get_recording(self):
         return self.recording
-    
 
-if __name__ == "__main__": 
 
-    streamer = VisionProStreamer(ip = '10.29.230.57')
-    while True: 
+if __name__ == "__main__":
+
+    streamer = VisionProStreamer(ip="10.29.230.57")
+    while True:
 
         latest = streamer.get_latest()
         print(latest)
