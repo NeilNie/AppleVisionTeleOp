@@ -19,13 +19,16 @@ class VisionProStreamer:
         self.recording = []
         self.latest = None
         self.axis_transform = YUP2ZUP
-        self.start_streaming()
+        self.failed_to_start = False
 
     def start_streaming(self):
 
         self.stream_thread = Thread(target=self.stream)
         self.stream_thread.start()
         while self.latest is None:
+            if self.failed_to_start:
+                cprint("Failed to start streaming. Please check the IP address.", "red")
+                raise RuntimeError("Failed to start streaming.")
             pass
         print(" == DATA IS FLOWING IN! ==")
         print("Ready to start streaming.")
@@ -67,9 +70,8 @@ class VisionProStreamer:
                     self.latest = transformations
 
         except Exception as e:
-            self.stream_thread.join()
+            self.failed_to_start = True
             print(f"An error occurred: {e}")
-            cprint("Streaming stopped. To start, call `start_streaming()`", "red")
             return
 
     def get_latest(self):
