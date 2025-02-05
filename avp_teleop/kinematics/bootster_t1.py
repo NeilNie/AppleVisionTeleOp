@@ -100,7 +100,8 @@ class BoosterT1IKSolver:
         if not os.path.exists(urdf_path):
             raise FileNotFoundError(f"URDF file not found: {urdf_path}")
 
-        gs.init()
+        if not gs._initialized:
+            gs.init()
 
         # Create a Genesis scene for IK computations.
         # We disable the viewer as visualization is not required.
@@ -182,7 +183,7 @@ class BoosterT1IKSolver:
             quats=[left_quat, right_quat],
             return_error=True,
         )
-        return qpos, error
+        return qpos.cpu().numpy(), error.cpu().numpy()
 
     def _solve_left_eef_pose(self, left_eef_pose: np.ndarray):
         # Convert the desired 4x4 poses into position and quaternion for IK.
@@ -198,7 +199,7 @@ class BoosterT1IKSolver:
             quat=left_quat,
             return_error=True,
         )
-        return qpos, error
+        return qpos.cpu().numpy(), error.cpu().numpy()
 
     def _solve_right_eef_pose(self, right_eef_pose: np.ndarray):
         # Convert the desired 4x4 poses into position and quaternion for IK.
@@ -214,7 +215,7 @@ class BoosterT1IKSolver:
             quat=right_quat,
             return_error=True,
         )
-        return qpos, error
+        return qpos.cpu().numpy(), error.cpu().numpy()
 
     def solve(
         self,

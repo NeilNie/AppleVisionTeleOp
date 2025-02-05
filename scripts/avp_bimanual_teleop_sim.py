@@ -20,8 +20,6 @@ from avp_teleop.utils.constants.robot.booster import (
 from avp_teleop.utils.geometry.transformations import convert_pose_mat2quat
 
 
-robot_type = "bimanual"
-
 avp_ip = "192.168.0.111"  # Change this IP as necessary.
 streamer = VisionProStreamer(ip=avp_ip, record=False)
 try:
@@ -29,7 +27,7 @@ try:
 except:
     print("Failed to start streaming. Please check the IP address.")
 
-ik_solver = BoosterT1IKSolver(variant=robot_type, headless=False)
+ik_solver = BoosterT1IKSolver(variant="bimanual", headless=False)
 
 
 def run_sim(scene):
