@@ -1,15 +1,17 @@
 import os
-import numpy as np
-import genesis as gs
 from enum import IntEnum
-from avp_teleop.utils.geometry.transformations import quaternion_from_matrix, convert_pose_quat2mat
-from avp_teleop.utils.constants.robot.booster import (
-    L_EEF_LINK_NAME,
-    R_EEF_LINK_NAME,
-    HEAD_LINK_NAME,
-    BASE_LINK_NAME,
-)
-from avp_teleop.utils.constants.robot.booster.transformation import T_TO_LEFT_WRIST, T_TO_RIGHT_WRIST
+from typing import Optional
+
+import genesis as gs
+import numpy as np
+from avp_teleop.utils.constants.robot.booster import (BASE_LINK_NAME,
+                                                      HEAD_LINK_NAME,
+                                                      L_EEF_LINK_NAME,
+                                                      R_EEF_LINK_NAME)
+from avp_teleop.utils.constants.robot.booster.transformation import (
+    T_TO_LEFT_WRIST, T_TO_RIGHT_WRIST)
+from avp_teleop.utils.geometry.transformations import (convert_pose_quat2mat,
+                                                       quaternion_from_matrix)
 
 
 # Define an enum for chirality (if needed in the future).
@@ -41,7 +43,7 @@ def avp_rel_transform_to_booster_rel_transform(avp_rel_transform, chirality: Chi
     return np.dot(avp_rel_transform, transform)
 
 
-class BoosterT1IKSolver():
+class BoosterT1IKSolver:
     """
     IK Solver for Booster T1 robots.
 
@@ -93,9 +95,7 @@ class BoosterT1IKSolver():
         self.base_link = BASE_LINK_NAME
 
         # Determine the full file path for the URDF.
-        base_dir = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), "../../data/Booster_T1")
-        )
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/Booster_T1"))
         urdf_path = os.path.join(base_dir, urdf_filename)
         if not os.path.exists(urdf_path):
             raise FileNotFoundError(f"URDF file not found: {urdf_path}")
@@ -107,7 +107,7 @@ class BoosterT1IKSolver():
         self.scene = gs.Scene(
             viewer_options=gs.options.ViewerOptions(
                 res=(1280, 720),
-                camera_pos=(-2.5, 0, 2.5),
+                camera_pos=(-1.5, 0, 2.5),
                 camera_lookat=(0.0, 0.0, 0.0),
                 camera_fov=60,
             ),
@@ -163,11 +163,64 @@ class BoosterT1IKSolver():
             np.concatenate((link.get_pos().cpu().numpy(), link.get_quat().cpu().numpy()))
         )
 
+    def _solve_both_eef_poses(self, left_eef_pose: np.ndarray, right_eef_pose: np.ndarray):
+
+        # Convert the desired 4x4 poses into position and quaternion for IK.
+        left_pos = left_eef_pose[:3, 3]
+        left_quat = quaternion_from_matrix(left_eef_pose)
+
+        right_pos = right_eef_pose[:3, 3]
+        right_quat = quaternion_from_matrix(right_eef_pose)
+
+        # Retrieve the link objects for the left and right end–effectors.
+        left_link = self.robot.get_link(self.l_eef_name)
+        right_link = self.robot.get_link(self.r_eef_name)
+
+        qpos, error = self.robot.inverse_kinematics_multilink(
+            links=[left_link, right_link],
+            poss=[left_pos, right_pos],
+            quats=[left_quat, right_quat],
+            return_error=True,
+        )
+        return qpos, error
+
+    def _solve_left_eef_pose(self, left_eef_pose: np.ndarray):
+        # Convert the desired 4x4 poses into position and quaternion for IK.
+        left_pos = left_eef_pose[:3, 3]
+        left_quat = quaternion_from_matrix(left_eef_pose)
+
+        # Retrieve the link objects for the left and right end–effectors.
+        left_link = self.robot.get_link(self.l_eef_name)
+
+        qpos, error = self.robot.inverse_kinematics(
+            link=left_link,
+            pos=left_pos,
+            quat=left_quat,
+            return_error=True,
+        )
+        return qpos, error
+
+    def _solve_right_eef_pose(self, right_eef_pose: np.ndarray):
+        # Convert the desired 4x4 poses into position and quaternion for IK.
+        right_pos = right_eef_pose[:3, 3]
+        right_quat = quaternion_from_matrix(right_eef_pose)
+
+        # Retrieve the link objects for the left and right end–effectors.
+        right_link = self.robot.get_link(self.r_eef_name)
+
+        qpos, error = self.robot.inverse_kinematics(
+            link=right_link,
+            pos=right_pos,
+            quat=right_quat,
+            return_error=True,
+        )
+        return qpos, error
+
     def solve(
         self,
-        left_eef_pose: np.ndarray,
-        right_eef_pose: np.ndarray,
-        current_joint_pos: np.ndarray,
+        left_eef_pose: Optional[np.ndarray],
+        right_eef_pose: Optional[np.ndarray],
+        current_joint_pos: np.ndarray = None,
     ):
         """
         Compute the joint configurations that achieve the desired end–effector poses.
@@ -184,31 +237,20 @@ class BoosterT1IKSolver():
         """
 
         # TODO: make sure both target poses are reachable, check by total length of the arm.
+        assert left_eef_pose is not None or right_eef_pose is not None, "At least one end–effector pose must be provided."
 
         # Update the robot with the current joint positions.
+        if current_joint_pos is None:
+            current_joint_pos = self.robot.get_qpos()
         self.robot.set_dofs_position(current_joint_pos)
         self.scene.step()  # Step the simulation to update transforms
 
-        # Convert the desired 4x4 poses into position and quaternion for IK.
-        left_pos = left_eef_pose[:3, 3]
-        left_quat = quaternion_from_matrix(left_eef_pose)
-
-        right_pos = right_eef_pose[:3, 3]
-        right_quat = quaternion_from_matrix(right_eef_pose)
-
-        # Retrieve the link objects for the left and right end–effectors.
-        left_link = self.robot.get_link(self.l_eef_name)
-        right_link = self.robot.get_link(self.r_eef_name)
-
-        # Call Genesis's multi–link inverse kinematics solver.
-        # The solver returns both the computed joint positions and the error.
-        qpos, error = self.robot.inverse_kinematics_multilink(
-            links=[left_link, right_link],
-            poss=[left_pos, right_pos],
-            quats=[left_quat, right_quat],
-            return_error=True,
-        )
-        return qpos, error
+        if left_eef_pose is not None and right_eef_pose is None:
+            return self._solve_both_eef_poses(left_eef_pose, right_eef_pose)
+        elif left_eef_pose is None and right_eef_pose is not None:
+            return self._solve_right_eef_pose(right_eef_pose)
+        else:
+            return self._solve_both_eef_poses(left_eef_pose, right_eef_pose)
 
     def forward(self, joint_angles: np.ndarray):
         """

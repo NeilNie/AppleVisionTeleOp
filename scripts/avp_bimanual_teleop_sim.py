@@ -107,20 +107,7 @@ def run_sim(scene):
         right_eef_pose = right_rel_booster
         # right_eef_pose = np.dot(ik_solver.T_head_to_base, right_rel_booster)
 
-        print(left_eef_pose)
-
-        pos_l = left_eef_pose[:3, 3]
-        quat_l = convert_pose_mat2quat(left_eef_pose)[3:]
-        pos_r = right_eef_pose[:3, 3]
-        quat_r = convert_pose_mat2quat(right_eef_pose)[3:]
-
-        qpos, error = robot.inverse_kinematics_multilink(
-            links=[end_effector_l, end_effector_r],
-            poss=[pos_l, pos_r],
-            quats=[quat_l, quat_r],
-            return_error=True,
-        )
-
+        qpos, error = ik_solver.solve(left_eef_pose, right_eef_pose)
         # robot.set_dofs_position(qpos[BIMANUAL_MASK[1:]], dofs_idx_local=indices)
         robot.set_dofs_position(qpos)
 
