@@ -27,8 +27,8 @@
 		16EE5E9B2B576DB000D354ED /* 🧩Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EE5E9A2B576DB000D354ED /* 🧩Model.swift */; };
 		C14DAF532B7C375D00A7333E /* GRPC in Frameworks */ = {isa = PBXBuildFile; productRef = C14DAF522B7C375D00A7333E /* GRPC */; };
 		C14DAF552B7C375D00A7333E /* protoc-gen-grpc-swift in Frameworks */ = {isa = PBXBuildFile; productRef = C14DAF542B7C375D00A7333E /* protoc-gen-grpc-swift */; };
-		C1893C762B93C1AC00F2269D /* handtracking.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1893C742B93C1AC00F2269D /* handtracking.grpc.swift */; };
-		C1893C772B93C1AC00F2269D /* handtracking.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1893C752B93C1AC00F2269D /* handtracking.pb.swift */; };
+		E9FF5F222D53061D009B43EF /* handtracking.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FF5F212D53061D009B43EF /* handtracking.pb.swift */; };
+		E9FF5F242D53062D009B43EF /* handtracking.grpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FF5F232D53062D009B43EF /* handtracking.grpc.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,7 +38,6 @@
 		16253CFA2B4E2FCB0028F0E2 /* 📏Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "📏Unit.swift"; sourceTree = "<group>"; };
 		16267B4F2B57D172000CA8AD /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		16267B512B57D362000CA8AD /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
-		16267B532B57D387000CA8AD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1638F80C2B50BC9700E0CAD2 /* DebugView.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DebugView.md; sourceTree = "<group>"; };
 		1642FAB42B4D54A60084F9ED /* 🛠️SettingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "🛠️SettingPanel.swift"; sourceTree = "<group>"; };
 		1642FAB82B4D6CAA0084F9ED /* 🌐RealityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "🌐RealityView.swift"; sourceTree = "<group>"; };
@@ -58,9 +57,9 @@
 		16EE5E962B576B9F00D354ED /* HandToGround.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = HandToGround.md; sourceTree = "<group>"; };
 		16EE5E982B576DA800D354ED /* 🧩Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "🧩Name.swift"; sourceTree = "<group>"; };
 		16EE5E9A2B576DB000D354ED /* 🧩Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "🧩Model.swift"; sourceTree = "<group>"; };
-		C1893C742B93C1AC00F2269D /* handtracking.grpc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = handtracking.grpc.swift; path = avp_teleop/grpc_msg/handtracking.grpc.swift; sourceTree = SOURCE_ROOT; };
-		C1893C752B93C1AC00F2269D /* handtracking.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = handtracking.pb.swift; path = avp_teleop/grpc_msg/handtracking.pb.swift; sourceTree = SOURCE_ROOT; };
 		C19896F42B7D5099003BAF99 /* VisionProTeleop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VisionProTeleop.entitlements; sourceTree = "<group>"; };
+		E9FF5F212D53061D009B43EF /* handtracking.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = handtracking.pb.swift; sourceTree = "<group>"; };
+		E9FF5F232D53062D009B43EF /* handtracking.grpc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = handtracking.grpc.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,7 +114,6 @@
 		165ADB3E2B4B71B0008A756F = {
 			isa = PBXGroup;
 			children = (
-				16267B532B57D387000CA8AD /* README.md */,
 				165ADB492B4B71B0008A756F /* Tracking Streamer */,
 				165ADB482B4B71B0008A756F /* Products */,
 			);
@@ -132,8 +130,8 @@
 		165ADB492B4B71B0008A756F /* Tracking Streamer */ = {
 			isa = PBXGroup;
 			children = (
-				C1893C742B93C1AC00F2269D /* handtracking.grpc.swift */,
-				C1893C752B93C1AC00F2269D /* handtracking.pb.swift */,
+				E9FF5F212D53061D009B43EF /* handtracking.pb.swift */,
+				E9FF5F232D53062D009B43EF /* handtracking.grpc.swift */,
 				C19896F42B7D5099003BAF99 /* VisionProTeleop.entitlements */,
 				165ADB4E2B4B71B0008A756F /* App.swift */,
 				165ADB502B4B71B0008A756F /* ContentView.swift */,
@@ -250,10 +248,10 @@
 				165ADB512B4B71B0008A756F /* ContentView.swift in Sources */,
 				16EE5E9B2B576DB000D354ED /* 🧩Model.swift in Sources */,
 				16688DE62B59F35F004CE12B /* 🥽AppModel.swift in Sources */,
+				E9FF5F222D53061D009B43EF /* handtracking.pb.swift in Sources */,
 				165ADB4F2B4B71B0008A756F /* App.swift in Sources */,
 				16C95AE52B5E762400CF0FED /* 🛠️MenuTop.swift in Sources */,
-				C1893C762B93C1AC00F2269D /* handtracking.grpc.swift in Sources */,
-				C1893C772B93C1AC00F2269D /* handtracking.pb.swift in Sources */,
+				E9FF5F242D53062D009B43EF /* handtracking.grpc.swift in Sources */,
 				16C95AE32B5E75D800CF0FED /* 🛠️Panel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
