@@ -12,7 +12,7 @@ from pathlib import Path
 from avp_teleop import VisionProStreamer
 from avp_teleop.utils.isaac_utils import * 
 from avp_teleop.utils.se3_utils import * 
-from avp_teleop.utils.trn_constants import * 
+from avp_teleop.utils.constants.trn_constants import * 
 from copy import deepcopy
 from typing import * 
 
