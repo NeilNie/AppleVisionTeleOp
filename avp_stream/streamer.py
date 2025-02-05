@@ -33,6 +33,12 @@ class VisionProStreamer:
         print(" == DATA IS FLOWING IN! ==")
         print("Ready to start streaming.")
 
+    def stop_streaming(self):
+        self.stream_thread.join()
+        self.latest = None
+        self.failed_to_start = False
+        self.stream_thread = None
+
     def stream(self):
 
         request = handtracking_pb2.HandUpdate()
