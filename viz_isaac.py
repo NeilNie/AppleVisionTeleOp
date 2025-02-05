@@ -1,5 +1,5 @@
-from avp_stream.isaac_env import IsaacVisualizerEnv
-from avp_stream import VisionProStreamer
+from avp_teleop.isaac_env import IsaacVisualizerEnv
+from avp_teleop import VisionProStreamer
 import time 
 from typing import * 
 import numpy as np 

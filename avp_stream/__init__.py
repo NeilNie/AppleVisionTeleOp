@@ -1,3 +1,3 @@
 
-from avp_stream.streamer import VisionProStreamer
+from avp_teleop.streamer import VisionProStreamer
 

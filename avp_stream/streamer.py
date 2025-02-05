@@ -1,7 +1,7 @@
 import grpc
-from avp_stream.grpc_msg import *
+from avp_teleop.grpc_msg import *
 from threading import Thread
-from avp_stream.utils.grpc_utils import *
+from avp_teleop.utils.grpc_utils import *
 import numpy as np
 from termcolor import cprint
 

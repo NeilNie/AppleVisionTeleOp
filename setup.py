@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='avp_stream',
+    name='avp_teleop',
     version='1.0',
     description='This python package streams diverse tracking data available from AVP to any devices that can communicate with gRPC.',
     author='Younghyo Park',

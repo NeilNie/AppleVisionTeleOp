@@ -1,6 +1,6 @@
 # subscriber.py
 
-from avp_stream import VisionProStreamer
+from avp_teleop import VisionProStreamer
 import argparse 
 from typing import * 
 

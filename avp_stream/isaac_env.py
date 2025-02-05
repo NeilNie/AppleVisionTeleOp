@@ -9,10 +9,10 @@ import torch
 import time
 from pathlib import Path
 
-from avp_stream import VisionProStreamer
-from avp_stream.utils.isaac_utils import * 
-from avp_stream.utils.se3_utils import * 
-from avp_stream.utils.trn_constants import * 
+from avp_teleop import VisionProStreamer
+from avp_teleop.utils.isaac_utils import * 
+from avp_teleop.utils.se3_utils import * 
+from avp_teleop.utils.trn_constants import * 
 from copy import deepcopy
 from typing import * 
 

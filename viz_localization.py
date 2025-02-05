@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
 
-from avp_stream import VisionProStreamer
+from avp_teleop import VisionProStreamer
 from threading import Thread
 
 class LocalizationVisualizer:

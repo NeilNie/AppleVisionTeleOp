@@ -1,5 +1,5 @@
 import torch 
-from avp_stream.utils.se3_utils import * 
+from avp_teleop.utils.se3_utils import * 
 
 
 VISIONOS_TO_ISAAC = torch.tensor([[1, 0, 0, 0], 

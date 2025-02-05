@@ -45,13 +45,13 @@ After installation, click on the app on Vision Pro and click `Start`. That's it!
 The following python package allows you to receive the data stream from any device that's connected to the same WiFi network. First, install the package: 
 
 ```
-pip install avp_stream
+pip install avp_teleop
 ```
 
 Then, add this code snippet to any of your projects you were developing: 
 
 ```python
-from avp_stream import VisionProStreamer
+from avp_teleop import VisionProStreamer
 avp_ip = "10.31.181.201"   # example IP 
 s = VisionProStreamer(ip = avp_ip, record = True)
 

@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import avp_stream.grpc_msg.handtracking_pb2 as handtracking__pb2
+import avp_teleop.grpc_msg.handtracking_pb2 as handtracking__pb2
 
 
 class HandTrackingServiceStub(object):
